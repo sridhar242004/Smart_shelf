@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Netto Smart Shelf - Revolutionary Retail Experience</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.11.4/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.9.6/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --background-color: #ecf0f1;
+            --text-color: #34495e;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 80%);
+            animation: ripple 15s infinite linear;
+        }
+
+        @keyframes ripple {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 3em;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .smart-shelf {
+            background-color: white;
+            border-radius: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
+            margin-top: 40px;
+            padding: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #shelf-3d {
+            width: 100%;
+            height: 600px;
+            background-color: #f9f9f9;
+            border-radius: 10px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .product-card {
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(52, 152, 219, 0.3) 0%, rgba(231, 76, 60, 0.3) 100%);
+            transition: all 0.5s ease;
+        }
+
+        .product-card:hover::before {
+            top: 0;
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px) scale(1.03);
+        }
+
+        .product-lottie {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto;
+        }
+
+        .product-name {
+            font-weight: 600;
+            margin: 15px 0;
+            font-size: 1.2em;
+        }
+
+        .product-price {
+            font-size: 1.5em;
+            color: var(--accent-color);
+            margin-bottom: 15px;
+            font-weight: 700;
+        }
+
+        .update-price {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .update-price:hover {
+            background-color: var(--primary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .dashboard {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 30px;
+        }
+
+        .stats, .admin-panel {
+            flex: 1;
+            padding: 30px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats h3, .admin-panel h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+            font-size: 1.5em;
+            border-bottom: 2px solid var(--secondary-color);
+            padding-bottom: 10px;
+        }
+
+        #sales-chart {
+            width: 100%;
+            height: 300px;
+            margin-top: 20px;
+        }
+
+        .admin-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 10px;
+        }
+
+        .admin-btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(44, 62, 80, 0.4);
+        }
+
+        #lottie-container {
+            width: 100%;
+            height: 400px;
+            margin-top: 40px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .floating {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard {
+                flex-direction: column;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Netto Smart Shelf</h1>
+        <p>Revolutionizing Retail with AI and 3D Technology</p>
+    </header>
+
+    <div class="container">
+        <div class="smart-shelf">
+            <div id="shelf-3d"></div>
+        </div>
+
+        <div class="product-grid" id="product-grid"></div>
+
+        <div class="dashboard">
+            <div class="stats">
+                <h3>Real-time Analytics</h3>
+                <p>Total Products: <span id="total-products">0</span></p>
+                <p>Average Price: $<span id="avg-price">0.00</span></p>
+                <p>Stock Level: <span id="stock-level">0%</span></p>
+                <canvas id="sales-chart"></canvas>
+            </div>
+            <div class="admin-panel">
+                <h3>Smart Control Center</h3>
+                <button id="restock-btn" class="admin-btn">Restock All Products</button>
+                <button id="promo-btn" class="admin-btn">Apply Smart Discount</button>
+                <button id="optimize-btn" class="admin-btn">Optimize Shelf Layout</button>
+            </div>
+        </div>
+
+        <div id="lottie-container" class="floating"></div>
+    </div>
+
+    <script>
+        // Product data with Lottie animation paths
+        const products = [
+            { name: "Milk", price: 2.99, lottiePath: "Animation - 1723029164080.json" },
+            { name: "Bread", price: 1.99, lottiePath: "Animation - 1723029476081.json" },
+            { name: "Meat & Eggs", price: 3.49, lottiePath: "Animation - 1723029776829.json" },
+            { name: "Cheese", price: 4.99, lottiePath: "Animation - 1723029975181.json" },
+            { name: "Apples", price: 0.99, lottiePath: "Animation - 1723030087943.json" },
+            
+        ];
+
+        // 3D Shelf Setup
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(document.getElementById('shelf-3d').offsetWidth, document.getElementById('shelf-3d').offsetHeight);
+        document.getElementById('shelf-3d').appendChild(renderer.domElement);
+
+        // Create shelf
+        const shelfGeometry = new THREE.BoxGeometry(10, 0.5, 3);
+        const shelfMaterial = new THREE.MeshPhongMaterial({ color: 0x8B4513 });
+        const shelf = new THREE.Mesh(shelfGeometry, shelfMaterial);
+        scene.add(shelf);
+
+        // Add lighting
+        const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+        scene.add(ambientLight);
+
+        const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+        directionalLight.position.set(5, 5, 5);
+        scene.add(directionalLight);
+
+        camera.position.z = 8;
+
+        // Create product placeholders on the 3D shelf
+        const productPlaceholders = [];
+        products.forEach((product, index) => {
+            const geometry = new THREE.BoxGeometry(1, 1, 1);
+            const material = new THREE.MeshPhongMaterial({ color: Math.random() * 0xffffff });
+            const cube = new THREE.Mesh(geometry, material);
+            cube.position.x = (index - 2.5) * 2;
+            cube.position.y = 1;
+            shelf.add(cube);
+            productPlaceholders.push(cube);
+        });
+
+        // 3D Animation loop
+        function animate() {
+            requestAnimationFrame(animate);
+            shelf.rotation.y += 0.005;
+            productPlaceholders.forEach(cube => {
+                cube.rotation.x += 0.01;
+                cube.rotation.y += 0.01;
+            });
+            renderer.render(scene, camera);
+        }
+        animate();
+
+        // Populate product grid
+        const productGrid = document.getElementById('product-grid');
+        products.forEach((product, index) => {
+            const productCard = document.createElement('div');
+            productCard.className = 'product-card';
+            productCard.innerHTML = `
+                <div class="product-lottie" id="lottie-${index}"></div>
+                <h3 class="product-name">${product.name}</h3>
+                <p class="product-price">$${product.price.toFixed(2)}</p>
+                <button class="update-price" data-product="${product.name}">Update Price</button>
+            `;
+            productGrid.appendChild(productCard);
+
+            // Load Lottie animation for each product
+            lottie.loadAnimation({
+                container: document.getElementById(`lottie-${index}`),
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: product.lottiePath
+            });
+        });
+
+        // Update price functionality
+        productGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('update-price')) {
+                const productName = e.target.dataset.product;
+                const newPrice = prompt(`Enter new price for ${productName}:`);
+                if (newPrice && !isNaN(newPrice)) {
+                    const productIndex = products.findIndex(p => p.name === productName);
+                    products[productIndex].price = parseFloat(newPrice);
+                    e.target.previousElementSibling.textContent = `$${products[productIndex].price.toFixed(2)}`;
+                    updateStats();
+                    updateShelfPrices();
+                }
+            }
+        });
+
+        // Update 3D shelf prices
+        function updateShelfPrices() {
+            productPlaceholders.forEach((cube, index) => {
+                const price = products[index].price;
+                const hue = (1 - (price / 10)) * 120; // Map price to a color (red = expensive, green = cheap)
+                cube.material.color.setHSL(hue / 360, 1, 0.5);
+            });
+        }
+
+        // Update statistics
+        function updateStats() {
+            const totalProducts = products.length;
+            const avgPrice = products.reduce((sum, product) => sum + product.price, 0) / totalProducts;
+            const stockLevel = Math.floor(Math.random() * 100); // Simulated stock level
+
+            document.getElementById('total-products').textContent = totalProducts;
+            document.getElementById('avg-price').textContent = avgPrice.toFixed(2);
+            document.getElementById('stock-level').textContent = `${stockLevel}%`;
+
+            // Animate stats update
+            gsap.from(['#total-products', '#avg-price', '#stock-level'], {
+                duration: 0.5,
+                scale: 1.2,
+                color: "#3498db",
+                ease: "power2.out"
+            });
+
+            updateSalesChart();
+        }
+
+        // Initialize and update sales chart
+        let salesChart;
+        function updateSalesChart() {
+            const ctx = document.getElementById('sales-chart').getContext('2d');
+            const labels = products.map(product => product.name);
+            const data = products.map(product => product.price);
+
+            if (salesChart) {
+                salesChart.data.labels = labels;
+                salesChart.data.datasets[0].data = data;
+                salesChart.update();
+            } else {
+                salesChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Product Prices',
+                            data: data,
+                            backgroundColor: 'rgba(52, 152, 219, 0.6)',
+                            borderColor: 'rgba(52, 152, 219, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        updateStats();
+
+        // Admin panel functionality
+        document.getElementById('restock-btn').addEventListener('click', () => {
+            products.forEach(product => {
+                product.stock = Math.floor(Math.random() * 50) + 50; // Restock between 50-100 items
+            });
+            updateStats();
+            alert('All products have been restocked!');
+        });
+
+        document.getElementById('promo-btn').addEventListener('click', () => {
+            const discountPercentage = Math.floor(Math.random() * 20) + 5; // 5-25% discount
+            products.forEach(product => {
+                product.price *= (1 - discountPercentage / 100);
+            });
+            updateStats();
+            updateShelfPrices();
+            alert(`Smart Discount of ${discountPercentage}% applied to all products!`);
+        });
+
+        document.getElementById('optimize-btn').addEventListener('click', () => {
+            // Simulate shelf optimization
+            const optimizationTime = Math.floor(Math.random() * 3000) + 2000; // 2-5 seconds
+            alert('Optimizing shelf layout...');
+            setTimeout(() => {
+                products.sort((a, b) => b.price - a.price); // Sort by price descending
+                updateStats();
+                updateShelfPrices();
+                alert('Shelf layout has been optimized for maximum visibility and sales!');
+            }, optimizationTime);
+        });
+
+        // Lottie Animation for the bottom container
+        const lottieContainer = document.getElementById('lottie-container');
+        const lottieAnimation = lottie.loadAnimation({
+            container: lottieContainer,
+            renderer: 'svg',
+            loop: true,
+            autoplay: true,
+            path: 'Animation - 1723030757440.json' // Replace with a retail-themed animation
+        });
+
+        // Responsive design for 3D shelf
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(document.getElementById('shelf-3d').offsetWidth, document.getElementById('shelf-3d').offsetHeight);
+        });
+
+        // Add interactive hover effect to 3D products
+        const raycaster = new THREE.Raycaster();
+        const mouse = new THREE.Vector2();
+
+        function onMouseMove(event) {
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(productPlaceholders);
+
+            productPlaceholders.forEach(cube => {
+                cube.scale.set(1, 1, 1); // Reset scale
+            });
+
+            if (intersects.length > 0) {
+                const hoveredCube = intersects[0].object;
+                hoveredCube.scale.set(1.2, 1.2, 1.2); // Scale up hovered product
+            }
+        }
+
+        renderer.domElement.addEventListener('mousemove', onMouseMove, false);
+
+        // Add product rotation animation
+        function rotateProducts() {
+            productPlaceholders.forEach((cube, index) => {
+                cube.rotation.y = Math.sin(Date.now() * 0.001 + index) * 0.5;
+            });
+        }
+
+        // Update animation loop to include product rotation
+        function animate() {
+            requestAnimationFrame(animate);
+            shelf.rotation.y += 0.005;
+            rotateProducts();
+            renderer.render(scene, camera);
+        }
+
+        // Initialize drag controls for products
+        let draggedProduct = null;
+        let dragOffset = new THREE.Vector3();
+
+        function onMouseDown(event) {
+            event.preventDefault();
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(productPlaceholders);
+
+            if (intersects.length > 0) {
+                draggedProduct = intersects[0].object;
+                dragOffset.copy(draggedProduct.position).sub(intersects[0].point);
+            }
+        }
+
+        function onMouseUp(event) {
+            draggedProduct = null;
+        }
+
+        function onMouseDrag(event) {
+            if (draggedProduct) {
+                const rect = renderer.domElement.getBoundingClientRect();
+                mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+                mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+                raycaster.setFromCamera(mouse, camera);
+                const intersects = raycaster.intersectObject(shelf);
+
+                if (intersects.length > 0) {
+                    draggedProduct.position.copy(intersects[0].point.add(dragOffset));
+                    draggedProduct.position.y = 1; // Keep product on the shelf surface
+                }
+            }
+        }
+
+        renderer.domElement.addEventListener('mousedown', onMouseDown, false);
+        renderer.domElement.addEventListener('mouseup', onMouseUp, false);
+        renderer.domElement.addEventListener('mousemove', onMouseDrag, false);
+
+        // Add product info display on hover
+        function showProductInfo(product, x, y) {
+            const infoElement = document.createElement('div');
+            infoElement.style.position = 'absolute';
+            infoElement.style.left = `${x}px`;
+            infoElement.style.top = `${y}px`;
+            infoElement.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            infoElement.style.color = 'white';
+            infoElement.style.padding = '10px';
+            infoElement.style.borderRadius = '5px';
+            infoElement.style.zIndex = '1000';
+            infoElement.innerHTML = `
+                <h4>${product.name}</h4>
+                <p>Price: $${product.price.toFixed(2)}</p>
+                <p>Stock: ${product.stock}</p>
+            `;
+            document.body.appendChild(infoElement);
+            return infoElement;
+        }
+
+        let currentInfoElement = null;
+
+        renderer.domElement.addEventListener('mousemove', (event) => {
+            if (currentInfoElement) {
+                document.body.removeChild(currentInfoElement);
+                currentInfoElement = null;
+            }
+
+            const rect = renderer.domElement.getBoundingClientRect();
+            mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+            mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
+
+            raycaster.setFromCamera(mouse, camera);
+            const intersects = raycaster.intersectObjects(productPlaceholders);
+
+            if (intersects.length > 0) {
+                const index = productPlaceholders.indexOf(intersects[0].object);
+                const product = products[index];
+                currentInfoElement = showProductInfo(product, event.clientX + 10, event.clientY + 10);
+            }
+        });
+
+        // Initialize the application
+        updateStats();
+        updateShelfPrices();
+    </script>
+</body>
+</html>
